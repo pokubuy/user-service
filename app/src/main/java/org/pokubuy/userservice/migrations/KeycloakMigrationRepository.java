@@ -25,6 +25,13 @@ public final class KeycloakMigrationRepository {
             .one();
     }
 
+    public Mono<Void> lockTable() {
+        return template.getDatabaseClient()
+            .sql("LOCK TABLE :table_name IN ACCESS EXCLUSIVE MODE")
+            .bind("table_name", TABLE_NAME)
+            .then();
+    }
+
     public Mono<Void> createMigration(KeycloakPersistantMigrationData migrationData) {
         return template.insert(KeycloakPersistantMigrationData.class)
             .into(TABLE_NAME)
