@@ -55,27 +55,37 @@ public final class KeycloakMigrationRunner {
             })
             .collectList()
             .flatMapMany(migrations -> {
-                log.info("Applying {} migrations", migrations.size());
-                return Flux.fromIterable(migrations);
-            })
-            .concatMap(migration -> {
-                    log.info(
-                        "Applying migration version {}: {}",
-                        migration.annotation().version(),
-                        migration.task().getClass().getSimpleName()
-                    );
-                    return Mono.fromRunnable(() -> migration.task().execute(keycloak))
-                        .subscribeOn(keycloakScheduler)
-                        .then(repository.createMigration(new KeycloakPersistentMigrationData(
-                            migration.task().getClass().getSimpleName(),
-                            migration.annotation().version(),
-                            migration.annotation().description(),
-                            Instant.now()
-                        )));
+                if (migrations.isEmpty()) {
+                    log.info("No migrations applicable. Skipping migrations");
+                    return Mono.just(false);
                 }
-            )
+                log.info("Applying {} migrations", migrations.size());
+                return Flux.fromIterable(migrations)
+                    .concatMap(migration -> {
+                            log.info(
+                                "Applying migration version {}: {}",
+                                migration.annotation().version(),
+                                migration.task().getClass().getSimpleName()
+                            );
+                            return Mono.fromRunnable(() -> migration.task().execute(keycloak))
+                                .subscribeOn(keycloakScheduler)
+                                .then(repository.createMigration(new KeycloakPersistentMigrationData(
+                                    migration.task().getClass().getSimpleName(),
+                                    migration.annotation().version(),
+                                    migration.annotation().description(),
+                                    Instant.now()
+                                )));
+                        }
+                    )
+                    .then(Mono.just(true));
+            })
             .as(transactionalOperator::transactional)
-            .then(Mono.fromRunnable(() -> log.info("Migrations completed")));
+            .doOnNext(applied -> {
+                if (applied) {
+                    log.info("Migrations completed");
+                }
+            })
+            .then();
     }
 
     private KeycloakMigrationData getData(KeycloakMigrationTask migrationTask) {
