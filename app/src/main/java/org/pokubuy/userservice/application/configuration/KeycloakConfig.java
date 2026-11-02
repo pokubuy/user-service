@@ -23,13 +23,13 @@ public class KeycloakConfig {
     }
 
     @Bean
-    public Keycloak keycloak(KeycloakConfigurationProperties configurationProperties) {
+    public Keycloak adminKeycloak(KeycloakConfigurationProperties configurationProperties) {
         return KeycloakBuilder.builder()
             .serverUrl(configurationProperties.getUrl())
-            .realm(configurationProperties.getRealm())
-            .username(configurationProperties.getUsername())
-            .password(configurationProperties.getPassword())
-            .clientId(configurationProperties.getClientId())
+            .realm(configurationProperties.getAdminCredentials().getRealm())
+            .username(configurationProperties.getAdminCredentials().getUsername())
+            .password(configurationProperties.getAdminCredentials().getPassword())
+            .clientId(configurationProperties.getAdminCredentials().getClientId())
             .build();
     }
 }

@@ -7,11 +7,19 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties("keycloak")
 @Component
 @Data
-public class KeycloakConfigurationProperties {
+public final class KeycloakConfigurationProperties {
 
     private String url;
-    private String realm;
-    private String username;
-    private String password;
-    private String clientId;
+    private String targetRealmName;
+    private String targetClientId;
+    private Credentials adminCredentials;
+
+    @Data
+    public static class Credentials {
+
+        private String realm;
+        private String username;
+        private String password;
+        private String clientId;
+    }
 }

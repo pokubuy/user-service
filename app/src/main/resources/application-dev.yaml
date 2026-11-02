@@ -11,7 +11,8 @@ spring:
 
 keycloak:
   url: http://localhost:8000
-  realm: master
-  username: root
-  password: rootroot
-  client-id: admin-cli
+  admin-credentials:
+    realm: master
+    username: root
+    password: rootroot
+    client-id: admin-cli

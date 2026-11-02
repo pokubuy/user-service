@@ -1,9 +1,9 @@
-package org.pokubuy.userservice.application.migrations.migrations;
+package org.pokubuy.userservice.infrastructure.migrations.migrations;
 
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.representations.idm.RealmRepresentation;
-import org.pokubuy.userservice.application.migrations.KeycloakMigrationTask;
-import org.pokubuy.userservice.application.migrations.annotations.KeycloakMigration;
+import org.pokubuy.userservice.infrastructure.migrations.KeycloakMigrationTask;
+import org.pokubuy.userservice.infrastructure.migrations.annotations.KeycloakMigration;
 
 @KeycloakMigration(
     version = 1,
@@ -11,13 +11,12 @@ import org.pokubuy.userservice.application.migrations.annotations.KeycloakMigrat
 )
 public final class V001__CreatePokubuyRealm implements KeycloakMigrationTask {
 
-    public final static String REALM_NAME = "pokubuy";
-
     @Override
-    public void execute(Keycloak keycloak) {
+    public void execute(Keycloak keycloak, String targetRealmName) {
         var realm = new RealmRepresentation();
-        realm.setRealm(REALM_NAME);
+        realm.setRealm(targetRealmName);
         realm.setEnabled(true);
+        realm.setLoginWithEmailAllowed(true);
         keycloak.realms().create(realm);
     }
 }

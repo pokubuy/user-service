@@ -1,12 +1,15 @@
+import com.google.protobuf.gradle.id
 import org.springframework.boot.gradle.tasks.run.BootRun
 
 plugins {
     java
     alias(libs.plugins.lombok)
     alias(libs.plugins.spring.boot)
+    alias(libs.plugins.protobuf)
 }
 
 repositories {
+    gradlePluginPortal()
     mavenCentral()
 }
 
@@ -28,9 +31,23 @@ dependencies {
     implementation(libs.jackson.legacy.databind)
     implementation(libs.jackson.legacy.dataformats.yaml)
     implementation(libs.keycloak.admin.client)
+
+    implementation(libs.spring.boot.starter.grpc.server)
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(25)
+    }
 }
 
 tasks.named<BootRun>("bootRun") {
     systemProperties["spring.profiles.active"] =
         if (project.hasProperty("prod")) "prod" else "dev"
+}
+
+protobuf {
+    plugins {
+        id("grpc")
+    }
 }

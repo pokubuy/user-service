@@ -1,2 +1,6 @@
 spring:
   application.name: pokubuy-user-service
+
+keycloak:
+  target-realm-name: pokubuy
+  target-client-id: user-service

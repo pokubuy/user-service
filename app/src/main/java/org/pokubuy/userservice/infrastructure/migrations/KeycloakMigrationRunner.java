@@ -1,10 +1,9 @@
-package org.pokubuy.userservice.application.migrations;
+package org.pokubuy.userservice.infrastructure.migrations;
 
 import lombok.extern.slf4j.Slf4j;
 import org.keycloak.admin.client.Keycloak;
-import org.pokubuy.userservice.application.migrations.annotations.KeycloakMigration;
-import org.pokubuy.userservice.infrastructure.migrations.KeycloakMigrationRepository;
-import org.pokubuy.userservice.infrastructure.migrations.KeycloakPersistentMigrationData;
+import org.pokubuy.userservice.infrastructure.migrations.annotations.KeycloakMigration;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.bind.Name;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.stereotype.Component;
@@ -23,20 +22,23 @@ public final class KeycloakMigrationRunner {
 
     private final KeycloakMigrationRepository repository;
     private final TransactionalOperator transactionalOperator;
-    private final Keycloak keycloak;
+    private final Keycloak adminKeycloak;
     private final Scheduler keycloakScheduler;
     private final List<KeycloakMigrationData> migrations;
+
+    @Value("${keycloak.target-realm-name}")
+    private String targetRealmName;
 
     public KeycloakMigrationRunner(
         KeycloakMigrationRepository repository,
         TransactionalOperator transactionalOperator,
-        Keycloak keycloak,
+        Keycloak adminKeycloak,
         @Name("keycloakScheduler") Scheduler keycloakScheduler,
         List<KeycloakMigrationTask> migrations
     ) {
         this.repository = repository;
         this.transactionalOperator = transactionalOperator;
-        this.keycloak = keycloak;
+        this.adminKeycloak = adminKeycloak;
         this.keycloakScheduler = keycloakScheduler;
         this.migrations = migrations.stream()
             .map(this::getData)
@@ -67,7 +69,7 @@ public final class KeycloakMigrationRunner {
                                 migration.annotation().version(),
                                 migration.task().getClass().getSimpleName()
                             );
-                            return Mono.fromRunnable(() -> migration.task().execute(keycloak))
+                            return Mono.fromRunnable(() -> migration.task().execute(adminKeycloak, targetRealmName))
                                 .subscribeOn(keycloakScheduler)
                                 .then(repository.createMigration(new KeycloakPersistentMigrationData(
                                     migration.task().getClass().getSimpleName(),

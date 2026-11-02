@@ -1,4 +1,4 @@
-package org.pokubuy.userservice.application.migrations;
+package org.pokubuy.userservice.infrastructure.migrations;
 
 import lombok.RequiredArgsConstructor;
 import org.jspecify.annotations.NonNull;

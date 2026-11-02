@@ -1,4 +1,4 @@
-package org.pokubuy.userservice.application.migrations.annotations;
+package org.pokubuy.userservice.infrastructure.migrations.annotations;
 
 import org.springframework.stereotype.Component;
 
