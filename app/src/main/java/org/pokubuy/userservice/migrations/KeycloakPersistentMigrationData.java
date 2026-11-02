@@ -2,7 +2,7 @@ package org.pokubuy.userservice.migrations;
 
 import java.time.Instant;
 
-public record KeycloakPersistantMigrationData(
+public record KeycloakPersistentMigrationData(
     String name,
     int version,
     String description,

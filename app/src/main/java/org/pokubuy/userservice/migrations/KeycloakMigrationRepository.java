@@ -32,8 +32,8 @@ public class KeycloakMigrationRepository {
             .then();
     }
 
-    public Mono<Void> createMigration(KeycloakPersistantMigrationData migrationData) {
-        return template.insert(KeycloakPersistantMigrationData.class)
+    public Mono<Void> createMigration(KeycloakPersistentMigrationData migrationData) {
+        return template.insert(KeycloakPersistentMigrationData.class)
             .into(TABLE_NAME)
             .using(migrationData)
             .then();

@@ -47,7 +47,7 @@ public final class KeycloakMigrationRunner {
                 .filter(migration -> migration.annotation().version() > latestVersion)
             )
             .concatMap(migration -> migration.task().execute(keycloak, keycloakScheduler)
-                .then(repository.createMigration(new KeycloakPersistantMigrationData(
+                .then(repository.createMigration(new KeycloakPersistentMigrationData(
                     migration.task().getClass().getSimpleName(),
                     migration.annotation().version(),
                     migration.annotation().description(),
