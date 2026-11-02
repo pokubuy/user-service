@@ -1,5 +1,17 @@
+spring:
+  r2dbc:
+    url: r2dbc:postgresql://localhost:5432/postgres
+    username: postgres
+    password: postgres
+
+  flyway:
+    url: jdbc:postgresql://localhost:5432/postgres
+    user: postgres
+    password: postgres
 
 keycloak:
-  url: http://localhost:8080
+  url: http://localhost:8000
+  realm: master
   username: root
   password: rootroot
+  ssl-context: admin-cli

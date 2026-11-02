@@ -1,4 +1,4 @@
-CREATE TABLE migrations
+CREATE TABLE keycloak_migrations
 (
     version     INT PRIMARY KEY,
     name        VARCHAR(255) NOT NULL,

@@ -4,6 +4,10 @@ logback = "1.6.6"
 jackson = "3.2.4"
 jackson2 = "2.22.4"
 springBoot = "4.1.2"
+scram = "3.4"
+postgresR2dbc = "1.1.3.RELEASE"
+postgres = "42.7.14"
+flyway = "13.12.0"
 resteasy = "7.0.5.Final"
 keycloak = "26.0.12"
 
@@ -12,6 +16,11 @@ logback-classic = { group = "ch.qos.logback", name = "logback-classic", version.
 jackson-core = { group = "tools.jackson.core", name = "jackson-core", version.ref = "jackson" }
 spring-boot-starter-webflux = { group = "org.springframework.boot", name = "spring-boot-starter-webflux", version.ref = "springBoot" }
 spring-boot-starter-data-r2dbc = { group = "org.springframework.boot", name = "spring-boot-starter-data-r2dbc", version.ref = "springBoot" }
+scram-common = { group = "com.ongres.scram", name = "scram-common", version.ref = "scram" }
+scram-client = { group = "com.ongres.scram", name = "scram-client", version.ref = "scram" }
+postgres-r2dbc = { group = "org.postgresql", name = "r2dbc-postgresql", version.ref = "postgresR2dbc" }
+postgres = { group = "org.postgresql", name = "postgresql", version.ref = "postgres" }
+flyway-postgres = { group = "org.flywaydb", name = "flyway-database-postgresql", version.ref = "flyway" }
 spring-boot-starter-flyway = { group = "org.springframework.boot", name = "spring-boot-starter-flyway", version.ref = "springBoot" }
 jackson-legacy-core = { group = "com.fasterxml.jackson.core", name = "jackson-core", version.ref = "jackson2" }
 jackson-legacy-databind = { group = "com.fasterxml.jackson.core", name = "jackson-databind", version.ref = "jackson2" }
@@ -21,3 +30,4 @@ keycloak-admin-client = { group = "org.keycloak", name = "keycloak-admin-client"
 
 [plugins]
 lombok = { id = "io.freefair.lombok", version.ref = "lombok" }
+spring-boot = { id = "org.springframework.boot", version.ref = "springBoot" }

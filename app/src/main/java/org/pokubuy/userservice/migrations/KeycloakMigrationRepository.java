@@ -9,7 +9,7 @@ import reactor.core.publisher.Mono;
 
 @Repository
 @RequiredArgsConstructor
-public final class KeycloakMigrationRepository {
+public class KeycloakMigrationRepository {
 
     private final R2dbcEntityTemplate template;
     private final static String TABLE_NAME = "keycloak_migrations";
