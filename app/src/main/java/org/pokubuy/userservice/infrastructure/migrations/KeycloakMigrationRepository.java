@@ -1,4 +1,4 @@
-package org.pokubuy.userservice.migrations;
+package org.pokubuy.userservice.infrastructure.migrations;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.r2dbc.core.R2dbcEntityTemplate;

@@ -1,4 +1,4 @@
-package org.pokubuy.userservice.migrations;
+package org.pokubuy.userservice.infrastructure.migrations;
 
 import java.time.Instant;
 

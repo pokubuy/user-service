@@ -1,8 +1,10 @@
-package org.pokubuy.userservice.migrations;
+package org.pokubuy.userservice.application.migrations;
 
 import lombok.extern.slf4j.Slf4j;
 import org.keycloak.admin.client.Keycloak;
-import org.pokubuy.userservice.migrations.annotations.KeycloakMigration;
+import org.pokubuy.userservice.application.migrations.annotations.KeycloakMigration;
+import org.pokubuy.userservice.infrastructure.migrations.KeycloakMigrationRepository;
+import org.pokubuy.userservice.infrastructure.migrations.KeycloakPersistentMigrationData;
 import org.springframework.boot.context.properties.bind.Name;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.stereotype.Component;

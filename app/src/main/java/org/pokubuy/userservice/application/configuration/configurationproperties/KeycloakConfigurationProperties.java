@@ -1,4 +1,4 @@
-package org.pokubuy.userservice.application.configurationproperties;
+package org.pokubuy.userservice.application.configuration.configurationproperties;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

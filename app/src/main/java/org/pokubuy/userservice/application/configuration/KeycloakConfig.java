@@ -1,8 +1,8 @@
-package org.pokubuy.userservice.application;
+package org.pokubuy.userservice.application.configuration;
 
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.KeycloakBuilder;
-import org.pokubuy.userservice.application.configurationproperties.KeycloakConfigurationProperties;
+import org.pokubuy.userservice.application.configuration.configurationproperties.KeycloakConfigurationProperties;
 import org.springframework.boot.context.properties.bind.Name;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
