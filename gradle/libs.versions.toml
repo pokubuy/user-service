@@ -1,0 +1,23 @@
+[versions]
+lombok = "8.14.1"
+logback = "1.6.6"
+jackson = "3.2.4"
+jackson2 = "2.22.4"
+springBoot = "4.1.2"
+resteasy = "7.0.5.Final"
+keycloak = "26.0.12"
+
+[libraries]
+logback-classic = { group = "ch.qos.logback", name = "logback-classic", version.ref = "logback" }
+jackson-core = { group = "tools.jackson.core", name = "jackson-core", version.ref = "jackson" }
+spring-boot-starter-webflux = { group = "org.springframework.boot", name = "spring-boot-starter-webflux", version.ref = "springBoot" }
+spring-boot-starter-data-r2dbc = { group = "org.springframework.boot", name = "spring-boot-starter-data-r2dbc", version.ref = "springBoot" }
+spring-boot-starter-flyway = { group = "org.springframework.boot", name = "spring-boot-starter-flyway", version.ref = "springBoot" }
+jackson-legacy-core = { group = "com.fasterxml.jackson.core", name = "jackson-core", version.ref = "jackson2" }
+jackson-legacy-databind = { group = "com.fasterxml.jackson.core", name = "jackson-databind", version.ref = "jackson2" }
+jackson-legacy-dataformats-yaml = { group = "com.fasterxml.jackson.dataformat", name = "jackson-dataformat-yaml", version.ref = "jackson2" }
+resteasy-core = { group = "org.jboss.resteasy", name = "resteasy-core", version.ref = "resteasy" }
+keycloak-admin-client = { group = "org.keycloak", name = "keycloak-admin-client", version.ref = "keycloak" }
+
+[plugins]
+lombok = { id = "io.freefair.lombok", version.ref = "lombok" }
