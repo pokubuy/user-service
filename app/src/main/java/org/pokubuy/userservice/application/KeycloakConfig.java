@@ -1,6 +1,7 @@
 package org.pokubuy.userservice.application;
 
 import org.keycloak.admin.client.Keycloak;
+import org.keycloak.admin.client.KeycloakBuilder;
 import org.pokubuy.userservice.application.configurationproperties.KeycloakConfigurationProperties;
 import org.springframework.boot.context.properties.bind.Name;
 import org.springframework.context.annotation.Bean;
@@ -23,11 +24,12 @@ public class KeycloakConfig {
 
     @Bean
     public Keycloak keycloak(KeycloakConfigurationProperties configurationProperties) {
-        return Keycloak.getInstance(
-            configurationProperties.getUrl(),
-            configurationProperties.getRealm(),
-            configurationProperties.getUsername(),
-            configurationProperties.getPassword()
-        );
+        return KeycloakBuilder.builder()
+            .serverUrl(configurationProperties.getUrl())
+            .realm(configurationProperties.getRealm())
+            .username(configurationProperties.getUsername())
+            .password(configurationProperties.getPassword())
+            .clientId(configurationProperties.getClientId())
+            .build();
     }
 }

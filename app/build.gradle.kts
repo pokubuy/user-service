@@ -20,14 +20,13 @@ dependencies {
     runtimeOnly(libs.postgres.r2dbc)
     implementation(libs.spring.boot.starter.data.r2dbc)
 
-    implementation(libs.postgres)
+    runtimeOnly(libs.postgres)
     runtimeOnly(libs.flyway.postgres)
     implementation(libs.spring.boot.starter.flyway)
 
     implementation(libs.jackson.legacy.core)
     implementation(libs.jackson.legacy.databind)
     implementation(libs.jackson.legacy.dataformats.yaml)
-    implementation(libs.resteasy.core)
     implementation(libs.keycloak.admin.client)
 }
 

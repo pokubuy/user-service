@@ -14,4 +14,4 @@ keycloak:
   realm: master
   username: root
   password: rootroot
-  ssl-context: admin-cli
+  client-id: admin-cli
