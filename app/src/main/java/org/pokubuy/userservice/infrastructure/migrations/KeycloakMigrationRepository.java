@@ -5,6 +5,8 @@ import org.springframework.data.r2dbc.core.R2dbcEntityTemplate;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Mono;
 
+import java.util.Objects;
+
 @Repository
 @RequiredArgsConstructor
 public class KeycloakMigrationRepository {
@@ -15,7 +17,7 @@ public class KeycloakMigrationRepository {
     public Mono<Integer> getLatestVersion() {
         return template.getDatabaseClient()
             .sql("SELECT version FROM " + TABLE_NAME + " ORDER BY version DESC LIMIT 1")
-            .map(row -> row.get("version", Integer.class))
+            .map(row -> Objects.requireNonNull(row.get("version", Integer.class)))
             .one()
             .defaultIfEmpty(0);
     }

@@ -11,7 +11,7 @@ import java.util.List;
     version = 3,
     description = "Creates roles"
 )
-public class V003__CreateRoles implements KeycloakMigrationTask {
+public final class V003__CreateRoles implements KeycloakMigrationTask {
 
     public final static List<String> ROLES = List.of(
         "client", "seller", "moderator", "support"

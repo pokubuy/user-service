@@ -12,7 +12,7 @@ import java.util.Objects;
     version = 4,
     description = "Binds roles to groups"
 )
-public class V004__BindRolesToGroups implements KeycloakMigrationTask {
+public final class V004__BindRolesToGroups implements KeycloakMigrationTask {
 
     private final static Map<String, List<String>> GROUP_ROLES = Map.of(
         "user", List.of("client", "seller"),
