@@ -1,5 +1,6 @@
 package org.pokubuy.userservice.migrations;
 
+import lombok.extern.slf4j.Slf4j;
 import org.keycloak.admin.client.Keycloak;
 import org.pokubuy.userservice.migrations.annotations.KeycloakMigration;
 import org.springframework.boot.context.properties.bind.Name;
@@ -15,6 +16,7 @@ import java.util.Comparator;
 import java.util.List;
 
 @Component
+@Slf4j
 public final class KeycloakMigrationRunner {
 
     private final KeycloakMigrationRepository repository;
@@ -41,21 +43,36 @@ public final class KeycloakMigrationRunner {
     }
 
     public Mono<Void> runMigrations() {
+        log.info("Initializing migrations (total amount: {})", migrations.size());
         return repository.lockTable()
             .then(repository.getLatestVersion())
-            .flatMapMany(latestVersion -> Flux.fromIterable(migrations)
-                .filter(migration -> migration.annotation().version() > latestVersion)
+            .flatMapMany(latestVersion -> {
+                log.info("Current Keycloak version is {}", latestVersion);
+                return Flux.fromIterable(migrations)
+                    .filter(migration -> migration.annotation().version() > latestVersion);
+            })
+            .collectList()
+            .flatMapMany(migrations -> {
+                log.info("Applying {} migrations", migrations.size());
+                return Flux.fromIterable(migrations);
+            })
+            .concatMap(migration -> {
+                    log.info(
+                        "Applying migration version {}: {}",
+                        migration.annotation().version(),
+                        migration.task().getClass().getSimpleName()
+                    );
+                    return migration.task().execute(keycloak, keycloakScheduler)
+                        .then(repository.createMigration(new KeycloakPersistentMigrationData(
+                            migration.task().getClass().getSimpleName(),
+                            migration.annotation().version(),
+                            migration.annotation().description(),
+                            Instant.now()
+                        )));
+                }
             )
-            .concatMap(migration -> migration.task().execute(keycloak, keycloakScheduler)
-                .then(repository.createMigration(new KeycloakPersistentMigrationData(
-                    migration.task().getClass().getSimpleName(),
-                    migration.annotation().version(),
-                    migration.annotation().description(),
-                    Instant.now()
-                )))
-            )
-            .then()
-            .as(transactionalOperator::transactional);
+            .as(transactionalOperator::transactional)
+            .then(Mono.fromRunnable(() -> log.info("Migrations completed")));
     }
 
     private KeycloakMigrationData getData(KeycloakMigrationTask migrationTask) {
