@@ -62,7 +62,8 @@ public final class KeycloakMigrationRunner {
                         migration.annotation().version(),
                         migration.task().getClass().getSimpleName()
                     );
-                    return migration.task().execute(keycloak, keycloakScheduler)
+                    return Mono.fromRunnable(() -> migration.task().execute(keycloak))
+                        .subscribeOn(keycloakScheduler)
                         .then(repository.createMigration(new KeycloakPersistentMigrationData(
                             migration.task().getClass().getSimpleName(),
                             migration.annotation().version(),
