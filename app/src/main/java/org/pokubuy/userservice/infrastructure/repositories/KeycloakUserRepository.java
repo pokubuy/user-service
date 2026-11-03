@@ -16,6 +16,7 @@ import org.pokubuy.userservice.domain.enitites.AuthData;
 import org.pokubuy.userservice.domain.enitites.UserInfo;
 import org.pokubuy.userservice.domain.enitites.enums.UserRole;
 import org.pokubuy.userservice.domain.exceptions.InvalidCredentailsException;
+import org.pokubuy.userservice.domain.exceptions.UserAlreadyExistsException;
 import org.pokubuy.userservice.domain.repositories.UserRepository;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Mono;
@@ -66,14 +67,18 @@ public class KeycloakUserRepository implements UserRepository {
 
             user.setEnabled(true);
 
-            String userId;
-            try (var response = targetRealm.users().create(user)) {
-                var location = response.getHeaderString("Location");
-                userId = location.substring(location.lastIndexOf('/') + 1);
-            } catch (Exception ex) {
-                log.error("error occurred", ex);
-                throw ex;
+            var response = targetRealm.users().create(user);
+            var status = response.getStatus();
+            if (status != 200) {
+                if (status == 409) {
+                    throw new UserAlreadyExistsException();
+                } else {
+                    throw new RuntimeException("Keycloak client error, status code: " + status);
+                }
             }
+            var location = response.getHeaderString("Location");
+            String userId = location.substring(location.lastIndexOf('/') + 1);
+            response.close();
 
             var userResource = targetRealm.users().get(userId);
             var strRoles = roles.stream()

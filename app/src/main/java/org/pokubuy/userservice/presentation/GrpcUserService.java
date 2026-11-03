@@ -21,27 +21,23 @@ public final class GrpcUserService extends UserServiceGrpc.UserServiceImplBase {
     private final UserRoleMapper userRoleMapper;
     private final AuthDataMapper authDataMapper;
     private final UserInfoMapper userInfoMapper;
+    private final ReactiveGrpcResponseHandler grpcResponseHandler;
 
     @Override
     public void createUser(CreateUserRequest request, StreamObserver<AuthData> responseObserver) {
-        userService.createUser(
-                request.getUsername(),
-                request.getEmail(),
-                request.getPassword(),
-                request.getRolesList()
-                    .stream()
-                    .map(userRoleMapper::toDomain)
-                    .toList()
-            )
-            .map(authDataMapper::toGrpc)
-            .subscribe(
-                responseObserver::onNext,
-                error -> {
-                    log.error("error occurred", error);
-                    responseObserver.onError(error);
-                },
-                responseObserver::onCompleted
-            );
+        grpcResponseHandler.handle(
+            userService.createUser(
+                    request.getUsername(),
+                    request.getEmail(),
+                    request.getPassword(),
+                    request.getRolesList()
+                        .stream()
+                        .map(userRoleMapper::toDomain)
+                        .toList()
+                )
+                .map(authDataMapper::toGrpc),
+            responseObserver
+        );
     }
 
     @Override
