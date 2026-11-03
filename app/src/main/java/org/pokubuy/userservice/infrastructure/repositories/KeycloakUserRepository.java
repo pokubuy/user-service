@@ -1,13 +1,10 @@
 package org.pokubuy.userservice.infrastructure.repositories;
 
 import jakarta.annotation.PostConstruct;
-import jakarta.ws.rs.NotAuthorizedException;
 import jdk.jfr.Name;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.keycloak.OAuth2Constants;
 import org.keycloak.admin.client.Keycloak;
-import org.keycloak.admin.client.KeycloakBuilder;
 import org.keycloak.admin.client.resource.RealmResource;
 import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.RoleRepresentation;
@@ -16,10 +13,15 @@ import org.pokubuy.userservice.application.configuration.configurationproperties
 import org.pokubuy.userservice.domain.enitites.AuthData;
 import org.pokubuy.userservice.domain.enitites.UserInfo;
 import org.pokubuy.userservice.domain.enitites.enums.UserRole;
-import org.pokubuy.userservice.domain.exceptions.InvalidCredentailsException;
 import org.pokubuy.userservice.domain.exceptions.UserAlreadyExistsException;
 import org.pokubuy.userservice.domain.repositories.UserRepository;
+import org.pokubuy.userservice.infrastructure.repositories.entities.RawAccessTokenData;
+import org.pokubuy.userservice.infrastructure.repositories.entities.RawAuthData;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Scheduler;
 
@@ -43,9 +45,17 @@ public class KeycloakUserRepository implements UserRepository {
 
     private RealmResource targetRealm;
 
+    private String authUrl;
+
+    private final WebClient webClient;
+
     @PostConstruct
     private void init() {
         targetRealm = keycloakAdmin.realm(keycloakConfigurationProperties.getTargetRealmName());
+        authUrl = keycloakConfigurationProperties.getUrl() +
+            "/realms/" +
+            keycloakConfigurationProperties.getTargetRealmName() +
+            "/protocol/openid-connect/token";
     }
 
     @Override
@@ -66,7 +76,6 @@ public class KeycloakUserRepository implements UserRepository {
             credential.setValue(password);
             credential.setTemporary(false);
             user.setCredentials(List.of(credential));
-
 
             user.setEnabled(true);
 
@@ -99,17 +108,19 @@ public class KeycloakUserRepository implements UserRepository {
 
     @Override
     public Mono<AuthData> authenticateUser(String email, String password) {
-        return execute(() -> {
-            try (var client = createAuthClient(email, password)) {
-                var token = client.tokenManager().getAccessToken();
-                return new AuthData(
-                    token.getToken(),
-                    token.getRefreshToken()
-                );
-            } catch (NotAuthorizedException ex) {
-                throw new InvalidCredentailsException(email);
-            }
-        });
+        MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
+        formData.add("grant_type", "password");
+        formData.add("client_id", keycloakConfigurationProperties.getTargetClientId());
+        formData.add("username", email);
+        formData.add("password", password);
+
+        return webClient.post()
+            .uri(authUrl)
+            .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+            .bodyValue(formData)
+            .retrieve()
+            .bodyToMono(RawAuthData.class)
+            .map(RawAuthData::toAuthData);
     }
 
     @Override
@@ -125,15 +136,20 @@ public class KeycloakUserRepository implements UserRepository {
             });
     }
 
-    private Keycloak createAuthClient(String email, String password) {
-        return KeycloakBuilder.builder()
-            .serverUrl(keycloakConfigurationProperties.getUrl())
-            .realm(keycloakConfigurationProperties.getTargetRealmName())
-            .clientId(keycloakConfigurationProperties.getTargetClientId())
-            .grantType(OAuth2Constants.PASSWORD)
-            .username(email)
-            .password(password)
-            .build();
+    @Override
+    public Mono<String> renewToken(String refreshToken) {
+        MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
+        formData.add("grant_type", "refresh_token");
+        formData.add("client_id", keycloakConfigurationProperties.getTargetClientId());
+        formData.add("refresh_token", refreshToken);
+
+        return webClient.post()
+            .uri(authUrl)
+            .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+            .bodyValue(formData)
+            .retrieve()
+            .bodyToMono(RawAccessTokenData.class)
+            .map(RawAccessTokenData::accessToken);
     }
 
     private static List<UserRole> mapRoleRepresentations(List<RoleRepresentation> rolesRepresentations) {

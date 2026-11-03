@@ -52,6 +52,15 @@ public final class GrpcUserService extends UserServiceGrpc.UserServiceImplBase {
     }
 
     @Override
+    public void renewToken(RenewTokenRequest request, StreamObserver<RenewTokenResponse> responseObserver) {
+        grpcResponseHandler.handle(
+            userService.renewToken(request.getRefreshToken())
+                .map(token -> RenewTokenResponse.newBuilder().setAccessToken(token).build()),
+            responseObserver
+        );
+    }
+
+    @Override
     public void getUser(GetUserRequest request, StreamObserver<UserInfo> responseObserver) {
         grpcResponseHandler.handle(
             userService.getUser(UUID.fromString(request.getId()))
@@ -59,4 +68,5 @@ public final class GrpcUserService extends UserServiceGrpc.UserServiceImplBase {
             responseObserver
         );
     }
+
 }

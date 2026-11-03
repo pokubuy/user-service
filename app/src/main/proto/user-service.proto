@@ -7,6 +7,7 @@ option java_outer_classname = "UserServiceProto";
 service UserService {
   rpc CreateUser (CreateUserRequest) returns (AuthData);
   rpc AuthenticateUser (AuthenticateUserRequest) returns (AuthData);
+  rpc RenewToken (RenewTokenRequest) returns (RenewTokenResponse);
   rpc GetUser(GetUserRequest) returns (UserInfo);
 }
 
@@ -27,6 +28,14 @@ message CreateUserRequest {
 message AuthenticateUserRequest {
   string email = 1;
   string password = 2;
+}
+
+message RenewTokenRequest {
+  string refreshToken = 1;
+}
+
+message RenewTokenResponse {
+  string accessToken = 1;
 }
 
 message GetUserRequest {

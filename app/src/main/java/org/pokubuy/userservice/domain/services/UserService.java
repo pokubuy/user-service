@@ -22,5 +22,7 @@ public interface UserService {
         String password
     );
 
+    Mono<String> renewToken(String refreshToken);
+
     Mono<UserInfo> getUser(UUID id);
 }

@@ -39,6 +39,12 @@ public final class UserServiceImpl implements UserService {
             .doOnSuccess(_ -> log.debug("User {} authenticated", maskData(email)));
     }
 
+    @Override
+    public Mono<String> renewToken(String refreshToken) {
+        return userRepository.renewToken(refreshToken)
+            .doOnSuccess(_ -> log.debug("Token {} refreshed", maskData(refreshToken)));
+    }
+
 
     public Mono<UserInfo> getUser(UUID id) {
         return userRepository.getUser(id)

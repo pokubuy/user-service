@@ -19,5 +19,7 @@ public interface UserRepository {
 
     Mono<UserInfo> getUser(UUID id);
 
+    Mono<String> renewToken(String refreshToken);
+
     Mono<AuthData> authenticateUser(String email, String password);
 }
