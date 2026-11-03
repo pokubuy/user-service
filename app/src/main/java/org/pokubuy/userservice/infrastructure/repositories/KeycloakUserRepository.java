@@ -108,18 +108,19 @@ public class KeycloakUserRepository implements UserRepository {
 
     @Override
     public Mono<AuthData> authenticateUser(String email, String password) {
-        MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
-        formData.add("grant_type", "password");
-        formData.add("client_id", keycloakConfigurationProperties.getTargetClientId());
-        formData.add("username", email);
-        formData.add("password", password);
-
-        return webClient.post()
-            .uri(authUrl)
-            .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-            .bodyValue(formData)
-            .retrieve()
-            .bodyToMono(RawAuthData.class)
+        return Mono.fromCallable(() -> {
+                MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
+                formData.add("grant_type", "password");
+                formData.add("client_id", keycloakConfigurationProperties.getTargetClientId());
+                formData.add("username", email);
+                formData.add("password", password);
+                return formData;
+            }).flatMap(formData -> webClient.post()
+                .uri(authUrl)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .bodyValue(formData)
+                .retrieve()
+                .bodyToMono(RawAuthData.class))
             .map(RawAuthData::toAuthData)
             .flatMap(authData -> execute(() -> {
                 var userResource = targetRealm.users()
