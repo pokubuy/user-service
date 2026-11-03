@@ -10,6 +10,7 @@ import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.KeycloakBuilder;
 import org.keycloak.admin.client.resource.RealmResource;
 import org.keycloak.representations.idm.CredentialRepresentation;
+import org.keycloak.representations.idm.RoleRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.pokubuy.userservice.application.configuration.configurationproperties.KeycloakConfigurationProperties;
 import org.pokubuy.userservice.domain.enitites.AuthData;
@@ -22,6 +23,7 @@ import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Scheduler;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
@@ -65,11 +67,12 @@ public class KeycloakUserRepository implements UserRepository {
             credential.setTemporary(false);
             user.setCredentials(List.of(credential));
 
+
             user.setEnabled(true);
 
             var response = targetRealm.users().create(user);
             var status = response.getStatus();
-            if (status != 200) {
+            if (!isSuccess(status)) {
                 if (status == 409) {
                     throw new UserAlreadyExistsException();
                 } else {
@@ -81,6 +84,7 @@ public class KeycloakUserRepository implements UserRepository {
             response.close();
 
             var userResource = targetRealm.users().get(userId);
+            log.info("required actions {}", userResource.toRepresentation().getRequiredActions());
             var strRoles = roles.stream()
                 .map(role -> role.toString().toLowerCase(Locale.ROOT))
                 .toList();
@@ -116,7 +120,7 @@ public class KeycloakUserRepository implements UserRepository {
                 return new UserInfo(
                     userRepresentation.getUsername(),
                     userRepresentation.getEmail(),
-                    mapRoles(userRepresentation.getRealmRoles())
+                    mapRoleRepresentations(userResource.roles().realmLevel().listAll())
                 );
             });
     }
@@ -132,10 +136,16 @@ public class KeycloakUserRepository implements UserRepository {
             .build();
     }
 
+    private static List<UserRole> mapRoleRepresentations(List<RoleRepresentation> rolesRepresentations) {
+        return mapRoles(
+            rolesRepresentations.stream().map(RoleRepresentation::getName).toList()
+        );
+    }
+
     private static List<UserRole> mapRoles(List<String> strRoles) {
-        return strRoles.stream()
-            .map(strRole -> UserRole.valueOf(strRole.toUpperCase(Locale.ROOT)))
-            .toList();
+        return Arrays.stream(UserRole.values()).filter(
+            role -> strRoles.contains(role.toString().toLowerCase(Locale.ROOT))
+        ).toList();
     }
 
     private <T> Mono<T> execute(Callable<T> callable) {
@@ -144,5 +154,9 @@ public class KeycloakUserRepository implements UserRepository {
 
     private Mono<Void> execute(Runnable runnable) {
         return Mono.fromRunnable(runnable).subscribeOn(keycloakScheduler).then();
+    }
+
+    private boolean isSuccess(int status) {
+        return status / 100 == 2;
     }
 }

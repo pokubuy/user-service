@@ -17,6 +17,8 @@ public final class V002__CreateUserServiceClient implements KeycloakMigrationTas
         var client = new ClientRepresentation();
         client.setId("user-service");
         client.setName("User Service");
+        client.setPublicClient(true);
+        client.setDirectAccessGrantsEnabled(true);
         realm.clients().create(client).close();
     }
 }

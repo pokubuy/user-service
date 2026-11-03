@@ -1,10 +1,11 @@
-package org.pokubuy.userservice.presentation;
+package org.pokubuy.userservice.presentation.services;
 
 import io.grpc.stub.StreamObserver;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.pokubuy.userservice.domain.services.UserService;
 import org.pokubuy.userservice.grpc.*;
+import org.pokubuy.userservice.presentation.ReactiveGrpcResponseHandler;
 import org.pokubuy.userservice.presentation.mappers.AuthDataMapper;
 import org.pokubuy.userservice.presentation.mappers.UserInfoMapper;
 import org.pokubuy.userservice.presentation.mappers.UserRoleMapper;
@@ -41,27 +42,21 @@ public final class GrpcUserService extends UserServiceGrpc.UserServiceImplBase {
     }
 
     @Override
-    public void authenticateUser(
-        AuthenticateUserRequest request,
-        StreamObserver<AuthData> responseObserver
+    public void authenticateUser(AuthenticateUserRequest request, StreamObserver<AuthData> responseObserver
     ) {
-        userService.authenticateUser(request.getEmail(), request.getPassword())
-            .map(authDataMapper::toGrpc)
-            .subscribe(
-                responseObserver::onNext,
-                responseObserver::onError,
-                responseObserver::onCompleted
-            );
+        grpcResponseHandler.handle(
+            userService.authenticateUser(request.getEmail(), request.getPassword())
+                .map(authDataMapper::toGrpc),
+            responseObserver
+        );
     }
 
     @Override
     public void getUser(GetUserRequest request, StreamObserver<UserInfo> responseObserver) {
-        userService.getUser(UUID.fromString(request.getId()))
-            .map(userInfoMapper::toGrpc)
-            .subscribe(
-                responseObserver::onNext,
-                responseObserver::onError,
-                responseObserver::onCompleted
-            );
+        grpcResponseHandler.handle(
+            userService.getUser(UUID.fromString(request.getId()))
+                .map(userInfoMapper::toGrpc),
+            responseObserver
+        );
     }
 }

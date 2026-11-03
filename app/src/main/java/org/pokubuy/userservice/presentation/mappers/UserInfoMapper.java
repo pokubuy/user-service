@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public final class UserInfoMapper {
 
-    private UserRoleMapper userRoleMapper;
+    private final UserRoleMapper userRoleMapper;
 
     public org.pokubuy.userservice.grpc.UserInfo toGrpc(
         org.pokubuy.userservice.domain.enitites.UserInfo domainUserInfo
@@ -17,7 +17,8 @@ public final class UserInfoMapper {
             .setEmail(domainUserInfo.email())
             .addAllRoles(domainUserInfo.roles()
                 .stream()
-                .map(userRoleMapper::toGrpc).toList()
+                .map(userRoleMapper::toGrpc)
+                .toList()
             )
             .build();
     }
