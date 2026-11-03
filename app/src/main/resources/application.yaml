@@ -4,3 +4,4 @@ spring:
 keycloak:
   target-realm-name: pokubuy
   target-client-id: user-service
+  max-sessions: 5

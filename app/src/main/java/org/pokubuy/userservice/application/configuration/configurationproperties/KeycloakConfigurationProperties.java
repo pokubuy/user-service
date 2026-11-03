@@ -13,6 +13,7 @@ public final class KeycloakConfigurationProperties {
     private String targetRealmName;
     private String targetClientId;
     private Credentials adminCredentials;
+    private Integer maxSessions;
 
     @Data
     public static class Credentials {

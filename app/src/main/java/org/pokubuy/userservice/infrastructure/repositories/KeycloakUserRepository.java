@@ -120,7 +120,23 @@ public class KeycloakUserRepository implements UserRepository {
             .bodyValue(formData)
             .retrieve()
             .bodyToMono(RawAuthData.class)
-            .map(RawAuthData::toAuthData);
+            .map(RawAuthData::toAuthData)
+            .flatMap(authData -> execute(() -> {
+                var userResource = targetRealm.users()
+                    .get(targetRealm.users().searchByEmail(email, true).getFirst().getId());
+
+                var sessions = userResource.getOfflineSessions(keycloakConfigurationProperties.getTargetClientId());
+                if (sessions.size() > keycloakConfigurationProperties.getMaxSessions()) {
+                    var counter = 0;
+                    var targetRemovedSessionsAmount = sessions.size() - keycloakConfigurationProperties.getMaxSessions();
+                    for (var session : sessions) {
+                        targetRealm.deleteSession(session.getId(), true);
+                        if (++counter >= targetRemovedSessionsAmount) {
+                            break;
+                        }
+                    }
+                }
+            }).thenReturn(authData));
     }
 
     @Override
