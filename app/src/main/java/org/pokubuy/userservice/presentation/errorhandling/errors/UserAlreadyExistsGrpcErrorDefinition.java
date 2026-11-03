@@ -7,7 +7,7 @@ import org.pokubuy.userservice.presentation.errorhandling.annotations.GrpcError;
 import org.slf4j.event.Level;
 
 @GrpcError(UserAlreadyExistsException.class)
-public class UserAlreadyExistsGrpcErrorDefinition extends GrpcErrorDefinition {
+public final class UserAlreadyExistsGrpcErrorDefinition extends GrpcErrorDefinition {
 
     @Override
     public Status grpcStatus() {
