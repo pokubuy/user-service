@@ -74,6 +74,8 @@ services:
       SPRING_PROFILES_ACTIVE: int
     networks:
       - keycloak_net
+    ports:
+      - "8081:9090"
     depends_on:
       keycloak:
         condition: service_healthy
