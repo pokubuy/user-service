@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 public final class AuthDataMapper {
 
     public org.pokubuy.userservice.grpc.AuthData toGrpc(
-        org.pokubuy.userservice.domain.enitites.AuthData domainAuthData
+        org.pokubuy.userservice.api.enitites.AuthData domainAuthData
     ) {
         return org.pokubuy.userservice.grpc.AuthData.newBuilder()
             .setAccessToken(domainAuthData.accessToken())
@@ -14,10 +14,10 @@ public final class AuthDataMapper {
             .build();
     }
 
-    public org.pokubuy.userservice.domain.enitites.AuthData toDomain(
+    public org.pokubuy.userservice.api.enitites.AuthData toDomain(
         org.pokubuy.userservice.grpc.AuthData grpcAuthData
     ) {
-        return new org.pokubuy.userservice.domain.enitites.AuthData(
+        return new org.pokubuy.userservice.api.enitites.AuthData(
             grpcAuthData.getAccessToken(),
             grpcAuthData.getRefreshToken()
         );

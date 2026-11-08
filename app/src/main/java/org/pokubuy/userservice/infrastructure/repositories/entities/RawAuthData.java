@@ -1,7 +1,7 @@
 package org.pokubuy.userservice.infrastructure.repositories.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.pokubuy.userservice.domain.enitites.AuthData;
+import org.pokubuy.userservice.api.enitites.AuthData;
 
 public record RawAuthData(
     @JsonProperty("access_token")

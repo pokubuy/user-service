@@ -1,36 +1,40 @@
 [versions]
 lombok = "8.14.1"
-logback = "1.6.6"
-jackson = "3.2.4"
-jackson2 = "2.22.4"
+reactor = "3.8.8"
+javax = "1.3.2"
+grpc = "1.85.1"
+springDependencyManagement = "1.1.7"
 springBoot = "4.1.2"
-scram = "3.4"
 postgresR2dbc = "1.1.3.RELEASE"
 postgres = "42.7.14"
 flyway = "13.12.0"
 keycloak = "26.0.12"
-protobuf = "4.36.2"
+springGrpc = "1.0.3"
 protobufPlugin = "0.10.0"
+protobuf = "4.36.2"
+protobufProtocGenGrpc = "1.9.1"
+reactorGrpc = "1.2.4"
 
 [libraries]
-logback-classic = { group = "ch.qos.logback", name = "logback-classic", version.ref = "logback" }
-jackson-core = { group = "tools.jackson.core", name = "jackson-core", version.ref = "jackson" }
-spring-boot-starter-webflux = { group = "org.springframework.boot", name = "spring-boot-starter-webflux", version.ref = "springBoot" }
-spring-boot-starter-data-r2dbc = { group = "org.springframework.boot", name = "spring-boot-starter-data-r2dbc", version.ref = "springBoot" }
-scram-common = { group = "com.ongres.scram", name = "scram-common", version.ref = "scram" }
-scram-client = { group = "com.ongres.scram", name = "scram-client", version.ref = "scram" }
+javax-annotation-api = { group = "javax.annotation", name = "javax.annotation-api", version.ref = "javax" }
+grpc-all = { group = "io.grpc", name = "grpc-all", version.ref = "grpc" }
+reactor-core = { group = "io.projectreactor", name = "reactor-core", version.ref = "reactor" }
+spring-boot-starter-webflux = { group = "org.springframework.boot", name = "spring-boot-starter-webflux" }
+spring-boot-starter-data-r2dbc = { group = "org.springframework.boot", name = "spring-boot-starter-data-r2dbc" }
 postgres-r2dbc = { group = "org.postgresql", name = "r2dbc-postgresql", version.ref = "postgresR2dbc" }
 postgres = { group = "org.postgresql", name = "postgresql", version.ref = "postgres" }
+flyway-core = { group = "org.flywaydb", name = "flyway-core", version.ref = "flyway" }
 flyway-postgres = { group = "org.flywaydb", name = "flyway-database-postgresql", version.ref = "flyway" }
-spring-boot-starter-flyway = { group = "org.springframework.boot", name = "spring-boot-starter-flyway", version.ref = "springBoot" }
-jackson-legacy-core = { group = "com.fasterxml.jackson.core", name = "jackson-core", version.ref = "jackson2" }
-jackson-legacy-databind = { group = "com.fasterxml.jackson.core", name = "jackson-databind", version.ref = "jackson2" }
-jackson-legacy-dataformats-yaml = { group = "com.fasterxml.jackson.dataformat", name = "jackson-dataformat-yaml", version.ref = "jackson2" }
+spring-boot-starter-flyway = { group = "org.springframework.boot", name = "spring-boot-starter-flyway" }
 keycloak-admin-client = { group = "org.keycloak", name = "keycloak-admin-client", version.ref = "keycloak" }
-spring-boot-starter-grpc-server = { group = "org.springframework.boot", name = "spring-boot-starter-grpc-server", version.ref = "springBoot" }
-protobuf = { group = "com.google.protobuf", name = "protobuf-java", version.ref = "protobuf" }
+protobuf-protoc = { group = "com.google.protobuf", name = "protoc", version.ref = "protobuf" }
+protobuf-protoc-gen-grpc = { group = "io.grpc", name = "protoc-gen-grpc-java", version.ref = "protobufProtocGenGrpc" }
+reactor-grpc = { group = "com.salesforce.servicelibs", name = "reactor-grpc", version.ref = "reactorGrpc" }
+reactor-grpc-stub = { group = "com.salesforce.servicelibs", name = "reactor-grpc-stub", version.ref = "reactorGrpc" }
+spring-grpc-server-starter = { group = "org.springframework.grpc", name = "spring-grpc-server-spring-boot-starter", version.ref = "springGrpc" }
 
 [plugins]
 lombok = { id = "io.freefair.lombok", version.ref = "lombok" }
+spring-dependency-management = { id = "io.spring.dependency-management", version.ref = "springDependencyManagement" }
 spring-boot = { id = "org.springframework.boot", version.ref = "springBoot" }
 protobuf = { id = "com.google.protobuf", version.ref = "protobufPlugin" }

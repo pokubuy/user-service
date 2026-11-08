@@ -2,9 +2,10 @@ package org.pokubuy.userservice.domain.services;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.pokubuy.userservice.domain.enitites.AuthData;
-import org.pokubuy.userservice.domain.enitites.UserInfo;
-import org.pokubuy.userservice.domain.enitites.enums.UserRole;
+import org.pokubuy.userservice.api.enitites.AuthData;
+import org.pokubuy.userservice.api.enitites.UserInfo;
+import org.pokubuy.userservice.api.enitites.enums.UserRole;
+import org.pokubuy.userservice.api.services.UserService;
 import org.pokubuy.userservice.domain.exceptions.UserNotFoundException;
 import org.pokubuy.userservice.domain.repositories.UserRepository;
 import reactor.core.publisher.Mono;

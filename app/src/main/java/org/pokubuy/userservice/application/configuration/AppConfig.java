@@ -1,7 +1,7 @@
 package org.pokubuy.userservice.application.configuration;
 
+import org.pokubuy.userservice.api.services.UserService;
 import org.pokubuy.userservice.domain.repositories.UserRepository;
-import org.pokubuy.userservice.domain.services.UserService;
 import org.pokubuy.userservice.domain.services.UserServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

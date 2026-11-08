@@ -9,11 +9,13 @@ import org.keycloak.admin.client.resource.RealmResource;
 import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.RoleRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
+import org.pokubuy.userservice.api.enitites.AuthData;
+import org.pokubuy.userservice.api.enitites.UserInfo;
+import org.pokubuy.userservice.api.enitites.enums.UserRole;
 import org.pokubuy.userservice.application.configuration.configurationproperties.KeycloakConfigurationProperties;
-import org.pokubuy.userservice.domain.enitites.AuthData;
-import org.pokubuy.userservice.domain.enitites.UserInfo;
-import org.pokubuy.userservice.domain.enitites.enums.UserRole;
+import org.pokubuy.userservice.domain.exceptions.UnauthorizedException;
 import org.pokubuy.userservice.domain.exceptions.UserAlreadyExistsException;
+import org.pokubuy.userservice.domain.exceptions.UserNotFoundException;
 import org.pokubuy.userservice.domain.repositories.UserRepository;
 import org.pokubuy.userservice.infrastructure.repositories.entities.RawAccessTokenData;
 import org.pokubuy.userservice.infrastructure.repositories.entities.RawAuthData;
@@ -22,6 +24,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Scheduler;
 
@@ -88,6 +91,7 @@ public class KeycloakUserRepository implements UserRepository {
                     throw new RuntimeException("Keycloak client error, status code: " + status);
                 }
             }
+
             var location = response.getHeaderString("Location");
             String userId = location.substring(location.lastIndexOf('/') + 1);
             response.close();
@@ -137,7 +141,8 @@ public class KeycloakUserRepository implements UserRepository {
                         }
                     }
                 }
-            }).thenReturn(authData));
+            }).thenReturn(authData))
+            .onErrorMap(KeycloakUserRepository::mapError);
     }
 
     @Override
@@ -150,6 +155,14 @@ public class KeycloakUserRepository implements UserRepository {
                     userRepresentation.getEmail(),
                     mapRoleRepresentations(userResource.roles().realmLevel().listAll())
                 );
+            })
+            .onErrorMap(error -> {
+                if (error instanceof WebClientResponseException ex) {
+                    if (ex.getStatusCode().value() == 400) {
+                        return new UserNotFoundException(id);
+                    }
+                }
+                return error;
             });
     }
 
@@ -160,13 +173,15 @@ public class KeycloakUserRepository implements UserRepository {
         formData.add("client_id", keycloakConfigurationProperties.getTargetClientId());
         formData.add("refresh_token", refreshToken);
 
-        return webClient.post()
+        var ans = webClient.post()
             .uri(authUrl)
             .contentType(MediaType.APPLICATION_FORM_URLENCODED)
             .bodyValue(formData)
             .retrieve()
             .bodyToMono(RawAccessTokenData.class)
-            .map(RawAccessTokenData::accessToken);
+            .map(RawAccessTokenData::accessToken)
+            .onErrorMap(KeycloakUserRepository::mapError);
+        return ans;
     }
 
     private static List<UserRole> mapRoleRepresentations(List<RoleRepresentation> rolesRepresentations) {
@@ -187,6 +202,14 @@ public class KeycloakUserRepository implements UserRepository {
 
     private Mono<Void> execute(Runnable runnable) {
         return Mono.fromRunnable(runnable).subscribeOn(keycloakScheduler).then();
+    }
+
+    private static Throwable mapError(Throwable ex) {
+        log.error("asd");
+        if (ex instanceof WebClientResponseException) {
+            return new UnauthorizedException();
+        }
+        return ex;
     }
 
     private boolean isSuccess(int status) {

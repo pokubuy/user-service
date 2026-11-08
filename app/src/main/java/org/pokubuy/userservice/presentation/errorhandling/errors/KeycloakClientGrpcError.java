@@ -1,21 +1,21 @@
 package org.pokubuy.userservice.presentation.errorhandling.errors;
 
 import io.grpc.Status;
-import org.pokubuy.userservice.domain.exceptions.UserAlreadyExistsException;
+import org.pokubuy.userservice.infrastructure.exceptions.KeycloakClientException;
 import org.pokubuy.userservice.presentation.errorhandling.GrpcErrorDefinition;
 import org.pokubuy.userservice.presentation.errorhandling.annotations.GrpcError;
 import org.slf4j.event.Level;
 
-@GrpcError(UserAlreadyExistsException.class)
-public final class UserAlreadyExistsGrpcErrorDefinition extends GrpcErrorDefinition {
+@GrpcError(KeycloakClientException.class)
+public final class KeycloakClientGrpcError extends GrpcErrorDefinition {
 
     @Override
     public Status grpcStatus() {
-        return Status.ALREADY_EXISTS;
+        return Status.INTERNAL;
     }
 
     @Override
     public Level logLevel() {
-        return Level.DEBUG;
+        return Level.ERROR;
     }
 }

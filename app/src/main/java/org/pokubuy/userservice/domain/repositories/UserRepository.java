@@ -1,8 +1,8 @@
 package org.pokubuy.userservice.domain.repositories;
 
-import org.pokubuy.userservice.domain.enitites.AuthData;
-import org.pokubuy.userservice.domain.enitites.UserInfo;
-import org.pokubuy.userservice.domain.enitites.enums.UserRole;
+import org.pokubuy.userservice.api.enitites.AuthData;
+import org.pokubuy.userservice.api.enitites.UserInfo;
+import org.pokubuy.userservice.api.enitites.enums.UserRole;
 import reactor.core.publisher.Mono;
 
 import java.util.List;

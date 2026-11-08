@@ -1,4 +1,4 @@
-package org.pokubuy.userservice.domain.enitites.enums;
+package org.pokubuy.userservice.api.enitites.enums;
 
 public enum UserRole {
     CLIENT,

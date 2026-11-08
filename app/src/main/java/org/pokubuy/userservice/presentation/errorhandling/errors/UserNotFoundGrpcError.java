@@ -1,17 +1,17 @@
 package org.pokubuy.userservice.presentation.errorhandling.errors;
 
 import io.grpc.Status;
-import org.pokubuy.userservice.domain.exceptions.InvalidCredentailsException;
+import org.pokubuy.userservice.domain.exceptions.UserNotFoundException;
 import org.pokubuy.userservice.presentation.errorhandling.GrpcErrorDefinition;
 import org.pokubuy.userservice.presentation.errorhandling.annotations.GrpcError;
 import org.slf4j.event.Level;
 
-@GrpcError(InvalidCredentailsException.class)
-public final class InvalidCredentialsGrpcErrorDefinition extends GrpcErrorDefinition {
+@GrpcError(UserNotFoundException.class)
+public final class UserNotFoundGrpcError extends GrpcErrorDefinition {
 
     @Override
     public Status grpcStatus() {
-        return Status.UNAUTHENTICATED;
+        return Status.NOT_FOUND;
     }
 
     @Override

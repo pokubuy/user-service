@@ -10,7 +10,7 @@ public final class UserInfoMapper {
     private final UserRoleMapper userRoleMapper;
 
     public org.pokubuy.userservice.grpc.UserInfo toGrpc(
-        org.pokubuy.userservice.domain.enitites.UserInfo domainUserInfo
+        org.pokubuy.userservice.api.enitites.UserInfo domainUserInfo
     ) {
         return org.pokubuy.userservice.grpc.UserInfo.newBuilder()
             .setUsername(domainUserInfo.username())
@@ -23,10 +23,10 @@ public final class UserInfoMapper {
             .build();
     }
 
-    public org.pokubuy.userservice.domain.enitites.UserInfo toDomain(
+    public org.pokubuy.userservice.api.enitites.UserInfo toDomain(
         org.pokubuy.userservice.grpc.UserInfo grpcUserInfo
     ) {
-        return new org.pokubuy.userservice.domain.enitites.UserInfo(
+        return new org.pokubuy.userservice.api.enitites.UserInfo(
             grpcUserInfo.getUsername(),
             grpcUserInfo.getEmail(),
             grpcUserInfo.getRolesList()

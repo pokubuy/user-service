@@ -1,6 +1,6 @@
-package org.pokubuy.userservice.domain.enitites;
+package org.pokubuy.userservice.api.enitites;
 
-import org.pokubuy.userservice.domain.enitites.enums.UserRole;
+import org.pokubuy.userservice.api.enitites.enums.UserRole;
 
 import java.util.List;
 
