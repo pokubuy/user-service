@@ -32,6 +32,8 @@ protobuf-protoc-gen-grpc = { group = "io.grpc", name = "protoc-gen-grpc-java", v
 reactor-grpc = { group = "com.salesforce.servicelibs", name = "reactor-grpc", version.ref = "reactorGrpc" }
 reactor-grpc-stub = { group = "com.salesforce.servicelibs", name = "reactor-grpc-stub", version.ref = "reactorGrpc" }
 spring-grpc-server-starter = { group = "org.springframework.grpc", name = "spring-grpc-server-spring-boot-starter", version.ref = "springGrpc" }
+spring-boot-starter-validation = { group = "org.springframework.boot", name = "spring-boot-starter-validation" }
+spring-boot-starter-aspectj = { group = "org.springframework.boot", name = "spring-boot-starter-aspectj" }
 
 [plugins]
 lombok = { id = "io.freefair.lombok", version.ref = "lombok" }

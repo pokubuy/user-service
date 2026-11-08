@@ -8,6 +8,8 @@ import org.pokubuy.userservice.presentation.errorhandling.GrpcErrorMapper;
 import org.pokubuy.userservice.presentation.mappers.AuthDataMapper;
 import org.pokubuy.userservice.presentation.mappers.UserInfoMapper;
 import org.pokubuy.userservice.presentation.mappers.UserRoleMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.grpc.server.service.GrpcService;
 import reactor.core.publisher.Mono;
 
@@ -16,13 +18,17 @@ import java.util.UUID;
 @GrpcService
 @RequiredArgsConstructor
 @Slf4j
-public final class GrpcUserService extends ReactorUserServiceGrpc.UserServiceImplBase {
+public class GrpcUserService extends ReactorUserServiceGrpc.UserServiceImplBase {
 
     private final UserService userService;
     private final UserRoleMapper userRoleMapper;
     private final AuthDataMapper authDataMapper;
     private final UserInfoMapper userInfoMapper;
     private final GrpcErrorMapper grpcErrorMapper;
+
+    @Lazy
+    @Autowired
+    private GrpcUserService self;
 
     @Override
     public Mono<AuthData> createUser(CreateUserRequest request) {
@@ -35,8 +41,7 @@ public final class GrpcUserService extends ReactorUserServiceGrpc.UserServiceImp
                     .map(userRoleMapper::toDomain)
                     .toList()
             )
-            .map(authDataMapper::toGrpc)
-            .onErrorMap(grpcErrorMapper::mapError);
+            .map(authDataMapper::toGrpc);
     }
 
     @Override

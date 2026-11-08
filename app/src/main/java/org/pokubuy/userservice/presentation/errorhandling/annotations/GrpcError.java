@@ -12,6 +12,5 @@ import java.lang.annotation.Target;
 @Component
 public @interface GrpcError {
 
-
     Class<? extends Throwable> value();
 }

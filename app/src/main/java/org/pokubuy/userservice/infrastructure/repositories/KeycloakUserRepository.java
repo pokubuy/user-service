@@ -205,7 +205,6 @@ public class KeycloakUserRepository implements UserRepository {
     }
 
     private static Throwable mapError(Throwable ex) {
-        log.error("asd");
         if (ex instanceof WebClientResponseException) {
             return new UnauthorizedException();
         }

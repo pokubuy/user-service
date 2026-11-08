@@ -26,6 +26,10 @@ dependencies {
 
     implementation(libs.spring.grpc.server.starter)
     implementation(libs.reactor.grpc.stub)
+
+    implementation(libs.spring.boot.starter.validation)
+    implementation(libs.spring.boot.starter.aspectj)
+
     implementation(project(":api"))
 }
 
