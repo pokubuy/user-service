@@ -1,6 +1,7 @@
 FROM eclipse-temurin:25-jdk-jammy AS builder
 WORKDIR /app
 
+COPY api/ ./api/
 COPY app/ ./app/
 COPY gradlew ./
 COPY gradle/ ./gradle/
