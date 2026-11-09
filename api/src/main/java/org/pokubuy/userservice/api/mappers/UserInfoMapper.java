@@ -1,13 +1,12 @@
-package org.pokubuy.userservice.presentation.mappers;
+package org.pokubuy.userservice.api.mappers;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
-
-@Component
-@RequiredArgsConstructor
 public final class UserInfoMapper {
 
     private final UserRoleMapper userRoleMapper;
+
+    public UserInfoMapper(UserRoleMapper userRoleMapper) {
+        this.userRoleMapper = userRoleMapper;
+    }
 
     public org.pokubuy.userservice.grpc.UserInfo toGrpc(
         org.pokubuy.userservice.api.enitites.UserInfo domainUserInfo

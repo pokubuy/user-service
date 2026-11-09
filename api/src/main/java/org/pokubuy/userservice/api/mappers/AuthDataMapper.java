@@ -1,8 +1,5 @@
-package org.pokubuy.userservice.presentation.mappers;
+package org.pokubuy.userservice.api.mappers;
 
-import org.springframework.stereotype.Component;
-
-@Component
 public final class AuthDataMapper {
 
     public org.pokubuy.userservice.grpc.AuthData toGrpc(

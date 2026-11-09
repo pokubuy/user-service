@@ -12,10 +12,11 @@ service UserService {
 }
 
 enum UserRole {
-  USER_ROLE_CLIENT = 0;
-  USER_ROLE_SELLER = 1;
-  USER_ROLE_MODERATOR = 2;
-  USER_ROLE_SUPPORT = 3;
+  USER_ROLE_UNSPECIFIED = 0;
+  USER_ROLE_CLIENT = 1;
+  USER_ROLE_SELLER = 2;
+  USER_ROLE_MODERATOR = 3;
+  USER_ROLE_SUPPORT = 4;
 }
 
 message CreateUserRequest {

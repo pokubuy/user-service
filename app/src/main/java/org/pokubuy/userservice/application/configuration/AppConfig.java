@@ -1,7 +1,6 @@
 package org.pokubuy.userservice.application.configuration;
 
 import org.pokubuy.userservice.api.services.UserService;
-import org.pokubuy.userservice.application.UserServiceValidationDecorator;
 import org.pokubuy.userservice.domain.repositories.UserRepository;
 import org.pokubuy.userservice.domain.services.UserServiceImpl;
 import org.springframework.context.annotation.Bean;
@@ -21,7 +20,7 @@ public class AppConfig {
 
     @Bean
     public UserService userService(UserRepository userRepository) {
-        return new UserServiceValidationDecorator(new UserServiceImpl(userRepository));
+        return new UserServiceImpl(userRepository);
     }
 
     @Bean
