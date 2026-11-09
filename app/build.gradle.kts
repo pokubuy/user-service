@@ -41,5 +41,7 @@ java {
 
 tasks.named<BootRun>("bootRun") {
     systemProperties["spring.profiles.active"] =
-        if (project.hasProperty("prod")) "prod" else "dev"
+        if (project.hasProperty("prod")) "prod"
+        else if (project.hasProperty("int")) "int"
+        else "dev"
 }

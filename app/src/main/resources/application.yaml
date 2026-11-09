@@ -1,6 +1,9 @@
 spring:
   application.name: pokubuy-user-service
   aop.proxy-target-class: false
+  profiles.group:
+    int: "deployed"
+    prod: "deployed"
 
 keycloak:
   target-realm-name: pokubuy

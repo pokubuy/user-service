@@ -14,4 +14,8 @@
     <springProfile name="dev">
         <logger name="org.pokubuy" level="trace"/>
     </springProfile>
+
+    <springProfile name="int">
+        <logger name="org.pokubuy" level="debug"/>
+    </springProfile>
 </configuration>

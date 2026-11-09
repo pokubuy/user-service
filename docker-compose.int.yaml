@@ -57,7 +57,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: user-service:development
+    image: user-service:int
     environment:
       KEYCLOAK_URL: http://keycloak:8080
       KEYCLOAK_ADMIN: root
@@ -71,7 +71,7 @@ services:
       DB_USER: postgres
       DB_PASSWORD: postgres
 
-      SPRING_PROFILES_ACTIVE: prod
+      SPRING_PROFILES_ACTIVE: int
     networks:
       - keycloak_net
     ports:
