@@ -39,7 +39,7 @@ public class UserServiceValidationProxy {
     public Mono<String> renewToken(
         @NotBlank
         @Pattern(
-            regexp = "^[A-Za-z0-9_-]+\\\\.[A-Za-z0-9_-]+\\\\.[A-Za-z0-9_-]+$",
+            regexp = "^[A-Za-z0-9_-]+\\.[A-Za-z0-9_-]+\\.[A-Za-z0-9_-]+$",
             message = "Not a JWT-token"
         )
         String refreshToken
